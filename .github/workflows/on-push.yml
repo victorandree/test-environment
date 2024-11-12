@@ -5,9 +5,16 @@ on:
       - main
     tags:
       - v*
+  workflow_dispatch:
+    inputs:
+      sha:
+        description: SHA to deploy, if not HEAD
+        type: string
+        default: ${{ github.sha }}
+        required: false
 jobs:
   echo:
     runs-on: ubuntu-latest
     steps:
       - name: Create annotation for build error
-        run: echo "::notice::SHA ${{ github.sha }}, REF ${{ github.ref }}"
+        run: echo "::notice::SHA ${{ github.sha }}, REF ${{ github.ref }}", INPUT ${{ inputs.sha }}
