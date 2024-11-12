@@ -1,3 +1,4 @@
+concurrency: ${{ github.sha }}
 on:
   push:
     branches:
