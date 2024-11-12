@@ -10,11 +10,11 @@ on:
       sha:
         description: SHA to deploy, if not HEAD
         type: string
-        default: ""
+        default: '${{ github.sha }}'
         required: false
 jobs:
   echo:
     runs-on: ubuntu-latest
     steps:
       - name: Create annotation for build error
-        run: echo "::notice::SHA ${{ github.sha }}, REF ${{ github.ref }}", INPUT ${{ inputs.sha }}
+        run: echo "::notice::SHA ${{ github.sha }}, REF ${{ github.ref }}", INPUT ${{ inputs.sha || github.sha }}
