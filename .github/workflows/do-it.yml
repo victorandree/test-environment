@@ -1,12 +1,19 @@
 name: Deploy Workflow
-concurrency: ${{ github.sha }}
 env:
-  SHA: "${{ inputs.sha || github.event.workflow_run.head_sha }}"
+  SHA: "${{ inputs.sha || github.event.workflow_run.head_sha || github.sha }}"
 on:
+  # Production deployment: SHA is from `github.sha`
+  push:
+    tags:
+      - v*
+
+  # Staging deployment: SHA is from github.event.workflow_run.head_sha
   workflow_run:
     workflows: [Build]
     types:
       - completed
+
+  # Explicit deployment: SHA is from input
   workflow_dispatch:
     inputs:
       sha:
@@ -37,9 +44,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Create annotation for build error
-        run: echo "::notice::SHA ${{ github.sha }}, REF ${{ github.ref }}", INPUT ${{ inputs.sha || github.sha }} IMAGE_NAME ${{ inputs.image_name }}
-      - name: another step
-        run: echo "im just another step in the machine"
+        run: echo "::notice::SHA ${{ env.SHA }}"
   echo2:
     name: "Echo 2 job"
     runs-on: ubuntu-latest
@@ -49,5 +54,6 @@ jobs:
   echo3:
     runs-on: ubuntu-latest
     if: ${{ github.event.workflow_run.conclusion == 'success' }}
+    # concurrency: "${{ env.SHA }}"
     steps:
       - run: echo 'The triggering workflow passed with head SHA ${{ github.event.workflow_run.head_sha }}'
