@@ -27,7 +27,16 @@ on:
         required: false
 jobs:
   echo:
+    name: "Echo job"
     runs-on: ubuntu-latest
     steps:
       - name: Create annotation for build error
         run: echo "::notice::SHA ${{ github.sha }}, REF ${{ github.ref }}", INPUT ${{ inputs.sha || github.sha }} IMAGE_NAME ${{ inputs.image_name }}
+      - name: another step
+        run: echo "im just another step in the machine"
+  echo2:
+    name: "Echo 2 job"
+    runs-on: ubuntu-latest
+    steps:
+      - name: another job
+        run: echo "another job!"
