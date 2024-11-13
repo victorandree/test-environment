@@ -46,6 +46,7 @@ jobs:
         run: echo "another job!"
   # Dispatch
   deploy:
+    name: Deploy
     uses: ./.github/workflows/deploy-action.yml
     with:
       environment: ${{ inputs.environment || (github.event_name == 'push' && startsWith(github.ref, 'refs/tags') && 'production') || 'test' }}
