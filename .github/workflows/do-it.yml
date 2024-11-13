@@ -1,7 +1,6 @@
 name: Deploy Workflow
 env:
   SHA: "${{ inputs.sha || github.event.workflow_run.head_sha || github.sha }}"
-  ENVIRONMENT: ${{ inputs.environment || (github.event_name == 'push' && startsWith(github.ref, 'refs/tags') && 'production') || 'test' }}
 on:
   # Production deployment: SHA is from `github.sha`
   push:
@@ -47,11 +46,10 @@ jobs:
         run: echo "another job!"
   # Dispatch
   deploy:
-    name: Deploy to ${{ env.ENVIRONMENT }}
     uses: ./.github/workflows/deploy-action.yml
     with:
-      environment: ${{ env.ENVIRONMENT }}
-      sha: ${{ env.SHA }}
+      environment: ${{ inputs.environment || (github.event_name == 'push' && startsWith(github.ref, 'refs/tags') && 'production') || 'test' }}
+      sha: ${{ inputs.sha || github.event.workflow_run.head_sha || github.sha }}
 
     # name: Deploy to
     # runs-on: ubuntu-latest
