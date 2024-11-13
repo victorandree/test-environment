@@ -41,12 +41,14 @@ jobs:
       short_sha: ${{ steps.short-sha.outputs.short_sha }}
     steps:
       - uses: actions/checkout@v4
+        with:
+          ref: ${{ inputs.sha || github.event.workflow_run.head_sha || github.sha }}
       - id: environment
         run: echo "environment=${{ inputs.environment || (github.event_name == 'push' && startsWith(github.ref, 'refs/tags') && 'production') || 'test' }}" >> "$GITHUB_OUTPUT"
       - id: sha
-        run: echo "sha=${{ inputs.sha || github.event.workflow_run.head_sha || github.sha }}" >> "$GITHUB_OUTPUT"
+        run: echo "sha=$(giv rev-parse HEAD)" >> "$GITHUB_OUTPUT"
       - id: short-sha
-        run: echo "short_sha=$(git rev-parse --short ${{ steps.sha.outputs.sha }})" >> "$GITHUB_OUTPUT"
+        run: echo "short_sha=$(git rev-parse --short HEAD)" >> "$GITHUB_OUTPUT"
   # echo:
   #   name: "Echo job"
   #   runs-on: ubuntu-latest
