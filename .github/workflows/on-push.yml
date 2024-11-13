@@ -1,4 +1,6 @@
 concurrency: ${{ github.sha }}
+env:
+  image_name: ${{ inputs.image_name || 'default_value' }}
 on:
   push:
     branches:
@@ -12,9 +14,14 @@ on:
         type: string
         default: ''
         required: false
+      image_name:
+        description: Image name
+        type: string
+        default: ''
+        required: false
 jobs:
   echo:
     runs-on: ubuntu-latest
     steps:
       - name: Create annotation for build error
-        run: echo "::notice::SHA ${{ github.sha }}, REF ${{ github.ref }}", INPUT ${{ inputs.sha || github.sha }}
+        run: echo "::notice::SHA ${{ github.sha }}, REF ${{ github.ref }}", INPUT ${{ inputs.sha || github.sha }} IMAGE_NAME ${{ env.image_name }}
