@@ -1,6 +1,12 @@
 name: Deploy Workflow
 concurrency: ${{ github.sha }}
+env:
+  SHA: "${{ inputs.sha || github.event.workflow_run.head_sha }}"
 on:
+  workflow_run:
+    workflows: [Build]
+    types:
+      - completed
   workflow_dispatch:
     inputs:
       sha:
@@ -40,3 +46,8 @@ jobs:
     steps:
       - name: another job
         run: echo "another job!"
+  echo3:
+    runs-on: ubuntu-latest
+    if: ${{ github.event.workflow_run.conclusion == 'success' }}
+    steps:
+      - run: echo 'The triggering workflow passed with head SHA ${{ github.event.workflow_run.head_sha }}'
