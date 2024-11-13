@@ -1,4 +1,4 @@
-name: Deploy to production Workflow
+name: Deploy ${{ github.ref }}
 on:
   push:
     tags:
