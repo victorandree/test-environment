@@ -40,6 +40,7 @@ jobs:
       sha: ${{ steps.sha.outputs.sha }}
       short_sha: ${{ steps.short_sha.outputs.short_sha }}
     steps:
+      - uses: actions/checkout@v4
       - id: environment
         run: echo "environment=${{ inputs.environment || (github.event_name == 'push' && startsWith(github.ref, 'refs/tags') && 'production') || 'test' }}" >> "$GITHUB_OUTPUT"
       - id: sha
