@@ -18,6 +18,9 @@ jobs:
           images: |
             my-image/app
           tags: |
-            type=sha
+            type=sha,prefix=
             type=raw,value=latest,enable={{is_default_branch}}
-      - run: echo ${{ steps.meta.outputs.tags }} ${{ steps.meta.outputs.labels }}
+          sep-tags: ','
+          sep-labels: ','
+      - run: echo "${{ steps.meta.outputs.tags }}"
+      - run: echo "${{ steps.meta.outputs.labels }}"
