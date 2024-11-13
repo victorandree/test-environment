@@ -3,11 +3,11 @@ concurrency: ${{ github.workflow }}-${{ inputs.environment }}
 on:
   workflow_call:
     inputs:
-      sha:
-        description: SHA to deploy, if not HEAD
+      tag:
+        description: Tag to deploy
         type: string
         default: ''
-        required: false
+        required: true
       environment:
         description: Environment
         type: string
@@ -19,6 +19,4 @@ jobs:
     runs-on: ubuntu-latest
     environment: ${{ inputs.environment }}
     steps:
-      - id: sha
-        run: echo "sha_short=$(git rev-parse --short ${{ inputs.sha }})" >> $GITHUB_OUTPUT
-      - run: echo "Deploy ${{ inputs.sha }} (${{ steps.sha.outputs.sha_short }}) to ${{ inputs.environment }}"
+      - run: echo "Deploy ${{ inputs.tag }} to ${{ inputs.environment }}"
