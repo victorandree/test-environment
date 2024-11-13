@@ -1,0 +1,33 @@
+name: Deploy Workflow
+concurrency: ${{ github.sha }}
+on:
+  workflow_dispatch:
+    inputs:
+      sha:
+        description: SHA to deploy, if not HEAD
+        type: string
+        default: ''
+        required: false
+      image_name:
+        description: Image name
+        type: string
+        default: ''
+        required: false
+  workflow_call:
+    inputs:
+      sha:
+        description: SHA to deploy, if not HEAD
+        type: string
+        default: ''
+        required: false
+      image_name:
+        description: Image name
+        type: string
+        default: ''
+        required: false
+jobs:
+  echo:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Create annotation for build error
+        run: echo "::notice::SHA ${{ github.sha }}, REF ${{ github.ref }}", INPUT ${{ inputs.sha || github.sha }} IMAGE_NAME ${{ inputs.image_name }}
