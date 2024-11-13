@@ -1,7 +1,6 @@
 name: Deploy Workflow
 env:
   SHA: "${{ inputs.sha || github.event.workflow_run.head_sha || github.sha }}"
-  ENVIRONMENT: "${{ inputs.environment || (startsWith(github.ref, 'refs/tags') && 'production') || 'test' }}"
 on:
   # Production deployment: SHA is from `github.sha`
   push:
@@ -27,37 +26,41 @@ on:
         type: string
         default: ''
         required: false
-  workflow_call:
-    inputs:
-      sha:
-        description: SHA to deploy, if not HEAD
-        type: string
-        default: ''
-        required: false
-      image_name:
-        description: Image name
-        type: string
-        default: ''
+      environment:
+        description: Environment
+        type: environment
+        default: test
         required: false
 jobs:
   echo:
     name: "Echo job"
     runs-on: ubuntu-latest
-    environment: ${{ env.ENVIRONMENT }}
     steps:
       - name: Create annotation for build error
         run: echo "::notice::SHA ${{ env.SHA }}"
   echo2:
     name: "Echo 2 job"
     runs-on: ubuntu-latest
-    environment: ${{ env.ENVIRONMENT }}
     steps:
       - name: another job
         run: echo "another job!"
-  echo3:
+  # Dispatch
+  deploy:
+    runs-on: ubuntu-latest
+    if: ${{ github.event_name == 'workflow_dispatch' }}
+    environment: ${{ inputs.environment }}
+    steps:
+      - run: echo 'Dispatch was called ${{ inputs.environment }}'
+  # Automated staging deployments
+  deploy-production:
+    runs-on: ubuntu-latest
+    if: ${{ github.event_name == 'push' }}
+    environment: production
+    steps:
+      - run: echo 'The production job was triggered'
+  deploy-staging:
     runs-on: ubuntu-latest
     if: ${{ github.event.workflow_run.conclusion == 'success' }}
-    environment: ${{ env.ENVIRONMENT }}
-    # concurrency: "${{ env.SHA }}"
+    environment: test
     steps:
       - run: echo 'The triggering workflow passed with head SHA ${{ github.event.workflow_run.head_sha }}'
