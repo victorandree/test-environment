@@ -7,6 +7,7 @@ jobs:
   run:
     runs-on: ubuntu-latest
     steps:
+      - uses: actions/checkout@v4
       - id: short_sha
         run: echo "short_sha=$(git rev-parse --short ${{ github.sha }})" >> "$GITHUB_OUTPUT"
       - run: echo "ok im done? ${{ steps.short_sha.outputs.short_sha }}"
