@@ -5,7 +5,6 @@ on:
       - v*
 jobs:
   deploy:
-    name: Deploy Job
     uses: ./.github/workflows/do-it.yml
     with:
       sha: ${{ github.sha }}
