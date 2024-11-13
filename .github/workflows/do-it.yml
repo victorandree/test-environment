@@ -66,7 +66,7 @@ jobs:
   #       run: echo "another job!"
   # Dispatch
   deploy:
-    name: Deploy
+    name: Deploy ${{ needs.set-inputs.outputs.short_sha }}
     uses: ./.github/workflows/deploy-action.yml
     needs: set-inputs
     with:
