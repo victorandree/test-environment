@@ -19,4 +19,6 @@ jobs:
     runs-on: ubuntu-latest
     environment: ${{ inputs.environment }}
     steps:
-      - run: echo 'Deploy ${{ inputs.sha }} to ${{ inputs.environment }}'
+      - id: sha
+        run: echo "sha_short=$(git rev-parse --short ${{ inputs.sha }})" >> $GITHUB_OUTPUT
+      - run: echo "Deploy ${{ inputs.sha }} (${{ steps.sha.outputs.sha_short }}) to ${{ inputs.environment }}"
