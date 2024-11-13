@@ -38,7 +38,7 @@ jobs:
     outputs:
       environment: ${{ steps.environment.outputs.environment }}
       sha: ${{ steps.sha.outputs.sha }}
-      short_sha: ${{ steps.short_sha.outputs.short_sha }}
+      short_sha: ${{ steps.short-sha.outputs.short_sha }}
     steps:
       - uses: actions/checkout@v4
       - id: environment
